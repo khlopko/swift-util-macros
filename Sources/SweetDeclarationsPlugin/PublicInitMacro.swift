@@ -13,10 +13,11 @@ public struct PublicInitMacro: MemberMacro {
         providingMembersOf declaration: some SwiftSyntax.DeclGroupSyntax,
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.DeclSyntax] {
-        let properties = gatherProperties(from: declaration)
+        let escapingArgs = escapingArgs(from: node)
+        let properties = gatherProperties(from: declaration, in: context)
         let result: SwiftSyntax.DeclSyntax = """
         public init(
-        \(raw: initParams(from: properties, nillable: false))
+        \(raw: initParams(from: properties, escapingPropertyTypes: escapingArgs, nillable: false))
         ) {
         \(raw: initBody(from: properties))
         }
