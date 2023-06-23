@@ -13,13 +13,13 @@ public struct PublicInitMacro: MemberMacro {
         providingMembersOf declaration: some SwiftSyntax.DeclGroupSyntax,
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.DeclSyntax] {
-        let escapingArgs = escapingArgs(from: node)
-        let properties = gatherProperties(from: declaration, in: context)
+        let escapingArgs = node.macrosEscapingArgs()
+        let properties = DeclarationProperty.gather(from: declaration, in: context)
         let result: SwiftSyntax.DeclSyntax = """
         public init(
-        \(raw: initParams(from: properties, escapingPropertyTypes: escapingArgs, nillable: false))
+        \(raw: properties.asInitParams(escapingPropertyTypes: escapingArgs, nillable: false))
         ) {
-        \(raw: initBody(from: properties))
+        \(raw: properties.asInitBody())
         }
         """
         return [result]

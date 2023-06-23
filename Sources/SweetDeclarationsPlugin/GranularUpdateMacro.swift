@@ -20,14 +20,13 @@ public struct GranularUpdateMacro: MemberMacro {
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.DeclSyntax] {
         let typeName = try typeName(from: declaration)
-        let escapingArgs = escapingArgs(from: node)
-        let properties = gatherProperties(from: declaration, in: context)
+        let properties = DeclarationProperty.gather(from: declaration, in: context)
         let result: SwiftSyntax.DeclSyntax = """
         public init(
             from another: \(raw: typeName),
-        \(raw: initParams(from: properties, escapingPropertyTypes: escapingArgs, nillable: true))
+        \(raw: properties.asInitParams(escapingPropertyTypes: [], nillable: true))
         ) {
-        \(raw: initBody(from: properties, decorateAssignment: { "\($0) ?? another.\($0)" }))
+        \(raw: properties.asInitBody(decorateAssignment: { "\($0) ?? another.\($0)" }))
         }
         """
         return [result]
