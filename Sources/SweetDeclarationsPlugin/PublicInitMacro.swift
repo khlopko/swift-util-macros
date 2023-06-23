@@ -13,24 +13,12 @@ public struct PublicInitMacro: MemberMacro {
         providingMembersOf declaration: some SwiftSyntax.DeclGroupSyntax,
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.DeclSyntax] {
-        let members = declaration.memberBlock.members
-        let params = members.compactMap { member -> (name: String, type: String)? in
-            guard let varDecl = member.decl.as(VariableDeclSyntax.self) else {
-                return nil
-            }
-            guard
-                let propertyName = varDecl.bindings.first?.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
-                let propertyType = varDecl.bindings.first?.typeAnnotation?.type.as(SimpleTypeIdentifierSyntax.self)?.name.text
-            else {
-                return nil
-            }
-            return (propertyName, propertyType)
-        }
+        let properties = gatherProperties(from: declaration)
         let result: SwiftSyntax.DeclSyntax = """
         public init(
-        \(raw: params.map { "    \($0.name): \($0.type)" }.joined(separator: ",\n"))
+        \(raw: initParams(from: properties, nillable: false))
         ) {
-        \(raw: params.map { "self.\($0.name) = \($0.name)" }.joined(separator: "\n"))
+        \(raw: initBody(from: properties))
         }
         """
         return [result]
