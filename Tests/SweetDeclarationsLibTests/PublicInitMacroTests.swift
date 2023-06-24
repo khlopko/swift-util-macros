@@ -4,7 +4,7 @@
 
 import XCTest
 
-@testable import SweetDeclarationsPlugin
+import SweetDeclarationsPlugin
 
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
