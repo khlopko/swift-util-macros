@@ -10,3 +10,6 @@ public macro PublicInit(escaping: [Any.Type]) = #externalMacro(module: "SweetDec
 
 @attached(member, names: arbitrary)
 public macro GranularUpdate() = #externalMacro(module: "SweetDeclarationsPlugin", type: "GranularUpdateMacro")
+
+@attached(member, names: arbitrary)
+public macro TestStub() = #externalMacro(module: "SweetDeclarationsPlugin", type: "TestStubMacro")

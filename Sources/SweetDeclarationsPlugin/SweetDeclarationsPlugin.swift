@@ -9,6 +9,7 @@ import SwiftSyntaxMacros
 struct SweetDeclarationsPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         GranularUpdateMacro.self,
-        PublicInitMacro.self
+        PublicInitMacro.self,
+        TestStubMacro.self
     ]
 }
