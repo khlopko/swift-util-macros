@@ -34,3 +34,21 @@ print("Before update: \(user)")
 
 let updated = User(from: user, name: Name(from: user.name, firstName: "Modified"))
 print("After update: \(updated)")
+
+@TestStub
+final class SomeProtocolStub {
+    func method1() throws {
+        method1Calls += 1
+    }
+
+    func method2(value: Int) async {
+        method2Args.append(value)
+        if let method2Delay {
+            try? await Task.sleep(nanoseconds: UInt64(method2Delay))
+        }
+    }
+
+    func method3(values: [String]) async throws -> Int {
+        return method3Result!
+    }
+}
