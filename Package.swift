@@ -38,5 +38,12 @@ let package = Package(
         ),
         .target(name: "SweetDeclarationsLib", dependencies: ["SweetDeclarationsPlugin"]),
         .executableTarget(name: "SweetDeclarationsClient", dependencies: ["SweetDeclarationsLib"]),
+        .testTarget(
+            name: "SweetDeclarationsLibTests",
+            dependencies: [
+                "SweetDeclarationsLib",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            ]
+        )
     ]
 )

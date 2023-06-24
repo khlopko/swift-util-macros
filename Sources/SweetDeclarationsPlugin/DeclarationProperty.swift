@@ -5,6 +5,7 @@
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
+import SwiftDiagnostics
 
 internal struct DeclarationProperty {
 
@@ -16,17 +17,25 @@ internal struct DeclarationProperty {
             guard let varDecl = member.decl.as(VariableDeclSyntax.self) else {
                 return nil
             }
+            let patternBindingSyntax = varDecl.bindings.first
             guard
-                let propertyName = varDecl.bindings.first?.pattern.as(IdentifierPatternSyntax.self)?.identifier.text
+                let propertyName = patternBindingSyntax?.pattern
+                    .as(IdentifierPatternSyntax.self)?.identifier.text
             else {
                 return nil
             }
+            let typeSyntax = patternBindingSyntax?.typeAnnotation?.type
             let propertyType: String
             let isClosure: Bool
-            if let simpleType = varDecl.bindings.first?.typeAnnotation?.type.as(SimpleTypeIdentifierSyntax.self)?.name.text {
+            if let optionalType = typeSyntax?.as(OptionalTypeSyntax.self) {
+                propertyType = optionalType.description
+                isClosure = optionalType.wrappedType
+                    .as(TupleTypeSyntax.self)?.elements.first?
+                    .is(FunctionTypeSyntax.self) == true
+            } else if let simpleType = typeSyntax?.as(SimpleTypeIdentifierSyntax.self)?.name.text {
                 propertyType = simpleType
                 isClosure = false
-            } else if let closureType = varDecl.bindings.first?.typeAnnotation?.type.as(FunctionTypeSyntax.self) {
+            } else if let closureType = typeSyntax?.as(FunctionTypeSyntax.self) {
                 propertyType = closureType.description
                 isClosure = true
             } else {
