@@ -11,6 +11,7 @@ public typealias GetConnections = () -> [User]
 @PublicInit(escaping: [GetConnections.self])
 @GranularUpdate
 public struct User {
+    var desc: String { "\(id)+\(name)" }
     public let id: String
     public let name: Name
     public let getConnections: GetConnections

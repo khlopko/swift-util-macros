@@ -5,6 +5,7 @@
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
+import SwiftDiagnostics
 
 public struct PublicInitMacro: MemberMacro {
 

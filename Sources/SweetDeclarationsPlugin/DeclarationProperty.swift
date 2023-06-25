@@ -9,6 +9,12 @@ import SwiftDiagnostics
 
 internal struct DeclarationProperty {
 
+    struct TypeNotFoundMessage: DiagnosticMessage {
+        let message = "Property type not found or not supported. Specify type explicitly if its missing to fix this error"
+        let diagnosticID = SwiftDiagnostics.MessageID(domain: "PublicInitMacro", id: "TypeNotFound")
+        let severity: SwiftDiagnostics.DiagnosticSeverity = .error
+    }
+
     internal static func gather(
         from declaration: some SwiftSyntax.DeclGroupSyntax,
         in context: some SwiftSyntaxMacros.MacroExpansionContext
@@ -22,6 +28,10 @@ internal struct DeclarationProperty {
                 let propertyName = patternBindingSyntax?.pattern
                     .as(IdentifierPatternSyntax.self)?.identifier.text
             else {
+                return nil
+            }
+            let isComputed = varDecl.bindings.contains { $0.accessor?.is(CodeBlockSyntax.self) == true }
+            guard !isComputed else {
                 return nil
             }
             let typeSyntax = patternBindingSyntax?.typeAnnotation?.type
@@ -39,6 +49,7 @@ internal struct DeclarationProperty {
                 propertyType = closureType.description
                 isClosure = true
             } else {
+                context.diagnose(Diagnostic(node: varDecl._syntaxNode, message: TypeNotFoundMessage()))
                 return nil
             }
             return DeclarationProperty(
