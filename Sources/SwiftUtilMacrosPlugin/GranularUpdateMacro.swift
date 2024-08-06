@@ -24,7 +24,7 @@ public struct GranularUpdateMacro: MemberMacro {
         let result: SwiftSyntax.DeclSyntax = """
         public init(
             from another: \(raw: typeName),
-        \(raw: properties.asInitParams(escapingPropertyTypes: [], nillable: true))
+        \(raw: properties.asInitParams(nillable: true))
         ) {
         \(raw: properties.asInitBody(decorateAssignment: { "\($0) ?? another.\($0)" }))
         }
@@ -36,10 +36,10 @@ public struct GranularUpdateMacro: MemberMacro {
         from declaration: some SwiftSyntax.DeclGroupSyntax
     ) throws -> String {
         if let structDecl = declaration.as(StructDeclSyntax.self) {
-            return structDecl.identifier.text
+            return structDecl.name.text
         }
         if let classDecl = declaration.as(ClassDeclSyntax.self) {
-            return classDecl.identifier.text
+            return classDecl.name.text
         }
         throw GenerationError.unsupportedType
     }

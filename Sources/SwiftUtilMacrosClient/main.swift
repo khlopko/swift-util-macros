@@ -4,16 +4,15 @@
 
 import Foundation
 
-import SweetDeclarationsLib
+import SwiftUtilMacros
 
-public typealias GetConnections = () -> [User]
-
-@PublicInit(escaping: [GetConnections.self])
+@PublicInit
 @GranularUpdate
 public struct User {
+    var desc: String { "\(id)+\(name)" }
     public let id: String
     public let name: Name
-    public let getConnections: GetConnections
+    public let getConnections: () -> [User]
     public let getPublications: (_ startDate: Date) -> [String]
 }
 
@@ -52,3 +51,4 @@ final class SomeProtocolStub {
         return method3Result!
     }
 }
+

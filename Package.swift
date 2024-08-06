@@ -1,49 +1,56 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
-import PackageDescription
 import CompilerPluginSupport
+import PackageDescription
 
 let package = Package(
-    name: "SweetDeclarations",
+    name: "swift-util-macros",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v13),
         .tvOS(.v13),
         .watchOS(.v6),
-        .macCatalyst(.v13)
+        .macCatalyst(.v13),
     ],
     products: [
         .library(
-            name: "SweetDeclarationsLib",
-            targets: ["SweetDeclarationsLib"]
+            name: "SwiftUtilMacros",
+            targets: ["SwiftUtilMacros"]
         ),
         .executable(
-            name: "SweetDeclarationsClient",
-            targets: ["SweetDeclarationsClient"]
+            name: "SwiftUtilMacrosClient",
+            targets: ["SwiftUtilMacrosClient"]
         ),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/apple/swift-syntax.git",
-            from: "509.0.0-swift-5.9-DEVELOPMENT-SNAPSHOT-2023-04-25-b"
-        ),
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.0-latest")
     ],
     targets: [
         .macro(
-            name: "SweetDeclarationsPlugin",
+            name: "SwiftUtilMacrosPlugin",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
-        .target(name: "SweetDeclarationsLib", dependencies: ["SweetDeclarationsPlugin"]),
-        .executableTarget(name: "SweetDeclarationsClient", dependencies: ["SweetDeclarationsLib"]),
-        .testTarget(
-            name: "SweetDeclarationsLibTests",
+        .target(
+            name: "SwiftUtilMacros",
             dependencies: [
-                "SweetDeclarationsLib",
+                .target(name: "SwiftUtilMacrosPlugin")
+            ]
+        ),
+        .executableTarget(
+            name: "SwiftUtilMacrosClient",
+            dependencies: [
+                .target(name: "SwiftUtilMacros")
+            ]
+        ),
+        .testTarget(
+            name: "SwiftUtilMacrosPluginTests",
+            dependencies: [
+                .target(name: "SwiftUtilMacrosPlugin"),
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
-        )
+        ),
     ]
 )

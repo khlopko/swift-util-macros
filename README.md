@@ -1,4 +1,4 @@
-# SweetDeclarations
+# swift-util-macros
 
 A set of Swift macros to provide convenient initialization / modification over structs and classes 
 declarations.

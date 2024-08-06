@@ -1,7 +1,4 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
-name: Swift
+name: test
 
 on:
   push:
@@ -10,13 +7,17 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: macos-latest
+  run-tests:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ ubuntu-22.04, macos-latest ]
     steps:
-    - uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: "5.9"
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+      - uses: actions/checkout@v4
+      - uses: khlopko/setup-swift@bfd61cbd14eeef55a27afc45138b61ced7174839
+        with:
+          swift-version: "main-snapshot"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: swift test
+
