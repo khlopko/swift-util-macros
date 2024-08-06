@@ -4,7 +4,7 @@
 
 import XCTest
 
-import SweetDeclarationsPlugin
+import SwiftUtilMacrosPlugin
 
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
@@ -46,10 +46,14 @@ internal final class TestStubMacroTests: XCTestCase {
 
                 func method4(value0: Int, value1: [String]) {
                 }
-                private (set) var method1Calls: Int = 0
-                private (set) var method2Args: [Int] = []
-                private (set) var method3Args: [[String]] = []
-                private (set) var method4Args: [(value0: Int, value1: [String])] = []
+
+                private(set) var method1Calls: Int = 0
+
+                private(set) var method2Args: [Int] = []
+
+                private(set) var method3Args: [[String]] = []
+
+                private(set) var method4Args: [(value0: Int, value1: [String])] = []
             }
             """#,
             macros: testMacros
@@ -69,7 +73,9 @@ internal final class TestStubMacroTests: XCTestCase {
             final class SomeProtocolStub: SomeProtocol {
                 func method1() throws {
                 }
-                private (set) var method1Calls: Int = 0
+
+                private(set) var method1Calls: Int = 0
+
                 var method1Error: (any Error)?
             }
             """#,
@@ -90,7 +96,9 @@ internal final class TestStubMacroTests: XCTestCase {
             final class SomeProtocolStub: SomeProtocol {
                 func method1() async {
                 }
-                private (set) var method1Calls: Int = 0
+
+                private(set) var method1Calls: Int = 0
+
                 var method1Delay: Double?
             }
             """#,
@@ -117,9 +125,13 @@ internal final class TestStubMacroTests: XCTestCase {
 
                 func method2() -> [String] {
                 }
-                private (set) var method1Calls: Int = 0
+
+                private(set) var method1Calls: Int = 0
+
                 var method1Result: Int?
-                private (set) var method2Calls: Int = 0
+
+                private(set) var method2Calls: Int = 0
+
                 var method2Result: [String]?
             }
             """#,

@@ -2,10 +2,10 @@
 //  TestStubMacro.swift
 //
 
+import SwiftDiagnostics
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
-import SwiftDiagnostics
 
 public struct TestStubMacro: MemberMacro {
 
@@ -27,7 +27,8 @@ public struct TestStubMacro: MemberMacro {
                 let parametersList = parameters.map { $0.type.description }.joined(separator: ", ")
                 callTrackSuffix = "Args: [\(parametersList)] = []"
             } else {
-                let parametersList = parameters
+                let parametersList =
+                    parameters
                     .map { "\($0.firstName.text): \($0.type.description)" }
                     .joined(separator: ", ")
                 callTrackSuffix = "Args: [(\(parametersList))] = []"
@@ -43,7 +44,8 @@ public struct TestStubMacro: MemberMacro {
                 properties.append(.init(stringLiteral: "var \(nameBase)Delay: Double?"))
             }
             if let returnType = funcDecl.signature.output?.returnType {
-                let type = "\(returnType.description.trimmingCharacters(in: .whitespacesAndNewlines))?"
+                let type =
+                    "\(returnType.description.trimmingCharacters(in: .whitespacesAndNewlines))?"
                 properties.append(.init(stringLiteral: "var \(nameBase)Result: \(type)"))
             }
             return properties
